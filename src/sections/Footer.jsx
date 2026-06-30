@@ -1,10 +1,23 @@
 import { motion } from 'framer-motion'
 
-const links = {
-  Services: ['Web Development', 'Mobile Apps', 'E-Commerce', 'SEO', 'Cybersecurity'],
-  Company: ['About Us', 'Portfolio', 'Blog', 'Careers', 'Contact'],
-  Legal: ['Privacy Policy', 'Terms of Service', 'Refund Policy'],
-}
+const serviceLinks = [
+  { label: 'Web Development',  href: '/services/web-development' },
+  { label: 'Mobile Apps',      href: '/services/mobile-app-development' },
+  { label: 'E-Commerce',       href: '/services/e-commerce' },
+  { label: 'SEO & Growth',     href: '/services/seo-growth' },
+  { label: 'Cybersecurity',    href: '/services/cybersecurity' },
+]
+
+const companyLinks = [
+  { label: 'About Us',   href: '/#about' },
+  { label: 'Portfolio',  href: '/#portfolio' },
+  { label: 'Contact',    href: '/#contact' },
+]
+
+const legalLinks = [
+  { label: 'Privacy Policy',    href: '/privacy-policy' },
+  { label: 'Terms & Conditions', href: '/terms-and-conditions' },
+]
 
 export default function Footer() {
   return (
@@ -16,7 +29,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <a href="#" className="flex items-center mb-4">
+            <a href="/" className="flex items-center mb-4">
               <img
                 src="https://mavericinfotech.in/wp-content/uploads/2024/12/Untitled-design-4.png"
                 alt="Maveric Infotech"
@@ -54,21 +67,41 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Link columns */}
-          {Object.entries(links).map(([title, items]) => (
-            <div key={title}>
-              <h4 className="font-semibold text-white text-sm mb-4">{title}</h4>
-              <ul className="space-y-2.5">
-                {items.map((item) => (
-                  <li key={item}>
-                    <a href="#" className="text-muted text-sm hover:text-white transition-colors">
-                      {item}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Services */}
+          <div>
+            <h4 className="font-semibold text-white text-sm mb-4">Services</h4>
+            <ul className="space-y-2.5">
+              {serviceLinks.map((l) => (
+                <li key={l.label}>
+                  <a href={l.href} className="text-muted text-sm hover:text-white transition-colors">{l.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Company */}
+          <div>
+            <h4 className="font-semibold text-white text-sm mb-4">Company</h4>
+            <ul className="space-y-2.5">
+              {companyLinks.map((l) => (
+                <li key={l.label}>
+                  <a href={l.href} className="text-muted text-sm hover:text-white transition-colors">{l.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h4 className="font-semibold text-white text-sm mb-4">Legal</h4>
+            <ul className="space-y-2.5">
+              {legalLinks.map((l) => (
+                <li key={l.label}>
+                  <a href={l.href} className="text-muted text-sm hover:text-white transition-colors">{l.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         <div className="border-t border-border pt-6 flex flex-col md:flex-row items-center justify-between gap-4">

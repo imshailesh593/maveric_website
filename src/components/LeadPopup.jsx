@@ -1,9 +1,7 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import ReCAPTCHA from 'react-google-recaptcha'
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { submitLead } from '../services/submitLead'
-
-const SITE_KEY = '6LeneAotAAAAABErUboTKGFMOHugiFkp_aNCKPXR'
 
 const services = [
   'Web Development', 'Mobile App', 'E-Commerce', 'SEO & Growth',
@@ -14,21 +12,20 @@ export default function LeadPopup({ onClose }) {
   const [form, setForm] = useState({ name: '', phone: '', service: '' })
   const [submitted, setSubmitted] = useState(false)
   const [sending, setSending] = useState(false)
-  const [captchaToken, setCaptchaToken] = useState(null)
-  const recaptchaRef = useRef(null)
+  const { executeRecaptcha } = useGoogleReCaptcha()
 
   const update = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!captchaToken) return
     setSending(true)
+    const token = executeRecaptcha ? await executeRecaptcha('lead_popup') : ''
     await submitLead({
       name:           form.name,
       phone:          form.phone,
       service:        form.service,
       source:         'Lead Popup',
-      recaptchaToken: captchaToken,
+      recaptchaToken: token,
     })
     setSending(false)
     setSubmitted(true)
@@ -102,20 +99,8 @@ export default function LeadPopup({ onClose }) {
                   {services.map(s => <option key={s} value={s} style={{ background: 'var(--input-bg)', color: '#fff' }}>{s}</option>)}
                 </select>
 
-                {/* reCAPTCHA */}
-                <div className="flex justify-center pt-1">
-                  <ReCAPTCHA
-                    ref={recaptchaRef}
-                    sitekey={SITE_KEY}
-                    onChange={token => setCaptchaToken(token)}
-                    onExpired={() => setCaptchaToken(null)}
-                    theme="dark"
-                    size="normal"
-                  />
-                </div>
-
                 <button type="submit"
-                  disabled={!form.name || !form.phone || !captchaToken || sending}
+                  disabled={!form.name || !form.phone || sending}
                   className="w-full py-3.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-accent to-purple text-bg hover:opacity-90 transition-opacity disabled:opacity-40 mt-1">
                   {sending ? 'Sending…' : 'Get Free Consultation →'}
                 </button>

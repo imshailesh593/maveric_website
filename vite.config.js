@@ -3,10 +3,22 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) return 'vendor-react'
+            if (id.includes('framer-motion')) return 'vendor-motion'
+            if (id.includes('gsap'))          return 'vendor-gsap'
+          }
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
+  },
   server: {
     proxy: {
-      // Proxy /api/* to your live server during local dev
-      // so the PHP endpoint is reachable without CORS issues
       '/api': {
         target: 'https://mavericinfotech.in',
         changeOrigin: true,

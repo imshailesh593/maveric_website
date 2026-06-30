@@ -1,9 +1,7 @@
 import { useState, useRef } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
-import ReCAPTCHA from 'react-google-recaptcha'
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { submitLead } from '../services/submitLead'
-
-const SITE_KEY = '6LeneAotAAAAABErUboTKGFMOHugiFkp_aNCKPXR'
 
 const steps = [
   { id: 1, label: 'About You' },
@@ -19,8 +17,7 @@ export default function Contact() {
   const [form, setForm] = useState({ name: '', company: '', service: '', budget: '', desc: '', email: '', phone: '' })
   const [submitted, setSubmitted] = useState(false)
   const [sending, setSending] = useState(false)
-  const [captchaToken, setCaptchaToken] = useState(null)
-  const recaptchaRef = useRef(null)
+  const { executeRecaptcha } = useGoogleReCaptcha()
 
   const headRef = useRef(null)
   const inView = useInView(headRef, { once: true })
@@ -33,6 +30,7 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSending(true)
+    const token = executeRecaptcha ? await executeRecaptcha('contact_form') : ''
     await submitLead({
       name:           form.name,
       email:          form.email,
@@ -42,7 +40,7 @@ export default function Contact() {
       budget:         form.budget,
       message:        form.desc,
       source:         'Contact Form',
-      recaptchaToken: captchaToken,
+      recaptchaToken: token,
     })
     setSending(false)
     setSubmitted(true)
@@ -318,24 +316,13 @@ export default function Contact() {
                               className="w-full bg-surface-2 border border-border rounded-xl px-4 py-3 text-white placeholder-muted/50 text-sm focus:outline-none focus:border-accent/50 transition-colors resize-none"
                             />
                           </div>
-                          {/* reCAPTCHA */}
-                          <div className="flex justify-center">
-                            <ReCAPTCHA
-                              ref={recaptchaRef}
-                              sitekey={SITE_KEY}
-                              onChange={token => setCaptchaToken(token)}
-                              onExpired={() => setCaptchaToken(null)}
-                              theme="dark"
-                            />
-                          </div>
-
                           <div className="flex gap-2">
                             <button type="button" onClick={back} className="px-5 py-3 rounded-xl text-sm text-muted border border-border hover:text-white transition-colors">
                               ← Back
                             </button>
                             <button
                               type="submit"
-                              disabled={!form.email || !captchaToken || sending}
+                              disabled={!form.email || sending}
                               className="flex-1 py-3 rounded-xl font-semibold bg-gradient-to-r from-accent to-purple text-bg text-sm disabled:opacity-40 hover:opacity-90 transition-opacity glow-cyan"
                             >
                               {sending ? 'Sending…' : 'Send Message 🚀'}

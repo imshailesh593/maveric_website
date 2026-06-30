@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useInView } from 'framer-motion'
 import { gsap } from 'gsap'
-import * as THREE from 'three'
 
 const FLOATING_ICONS = [
   { slug: 'react',             color: '#61DAFB', label: 'React',       x: 4,  y: 10, depth: 0.35, size: 64, rotate: 15,  floatDur: 3.2, floatDelay: 0.0  },
@@ -96,58 +95,47 @@ function ParticleCanvas() {
 
   useEffect(() => {
     const canvas = canvasRef.current
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
-    renderer.setPixelRatio(window.devicePixelRatio)
-    renderer.setSize(window.innerWidth, window.innerHeight)
+    const ctx = canvas.getContext('2d')
+    let w = canvas.width  = window.innerWidth
+    let h = canvas.height = window.innerHeight
+    let mX = 0.5, mY = 0.5
 
-    const scene = new THREE.Scene()
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-    camera.position.z = 5
+    const COUNT = 800
+    const pts = Array.from({ length: COUNT }, () => ({
+      x: Math.random() * w, y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.15,
+      vy: (Math.random() - 0.5) * 0.15,
+      r: Math.random() * 1.2 + 0.3,
+      cyan: Math.random() > 0.5,
+    }))
 
-    const count = 1500
-    const positions = new Float32Array(count * 3)
-    const colors = new Float32Array(count * 3)
-
-    for (let i = 0; i < count; i++) {
-      positions[i * 3]     = (Math.random() - 0.5) * 20
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 20
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 10
-      const isCyan = Math.random() > 0.5
-      if (isCyan) { colors[i * 3] = 0; colors[i * 3 + 1] = 0.74; colors[i * 3 + 2] = 0.85 }
-      else        { colors[i * 3] = 1; colors[i * 3 + 1] = 0.48; colors[i * 3 + 2] = 0 }
-    }
-
-    const geometry = new THREE.BufferGeometry()
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
-    const material = new THREE.PointsMaterial({ size: 0.008, vertexColors: true, transparent: true, opacity: 0.35 })
-    const particles = new THREE.Points(geometry, material)
-    scene.add(particles)
-
-    let mX = 0, mY = 0
-    const onMove = (e) => { mX = (e.clientX / window.innerWidth - 0.5) * 0.5; mY = (e.clientY / window.innerHeight - 0.5) * 0.5 }
+    const onMove = (e) => { mX = e.clientX / w; mY = e.clientY / h }
     window.addEventListener('mousemove', onMove)
 
-    let animId
-    const animate = () => {
-      animId = requestAnimationFrame(animate)
+    let id
+    const draw = () => {
+      id = requestAnimationFrame(draw)
       if (document.hidden) return
-      particles.rotation.y += 0.0005
-      particles.rotation.x += 0.0002
-      camera.position.x += (mX - camera.position.x) * 0.03
-      camera.position.y += (-mY - camera.position.y) * 0.03
-      camera.lookAt(scene.position)
-      renderer.render(scene, camera)
+      ctx.clearRect(0, 0, w, h)
+      for (const p of pts) {
+        p.x += p.vx + (mX - 0.5) * 0.08
+        p.y += p.vy + (mY - 0.5) * 0.08
+        if (p.x < 0) p.x = w; if (p.x > w) p.x = 0
+        if (p.y < 0) p.y = h; if (p.y > h) p.y = 0
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+        ctx.fillStyle = p.cyan ? 'rgba(0,189,217,0.4)' : 'rgba(255,122,0,0.3)'
+        ctx.fill()
+      }
     }
-    animate()
+    draw()
 
-    const onResize = () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight) }
+    const onResize = () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight }
     window.addEventListener('resize', onResize)
-
-    return () => { cancelAnimationFrame(animId); window.removeEventListener('mousemove', onMove); window.removeEventListener('resize', onResize); renderer.dispose(); geometry.dispose(); material.dispose() }
+    return () => { cancelAnimationFrame(id); window.removeEventListener('mousemove', onMove); window.removeEventListener('resize', onResize) }
   }, [])
 
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ opacity: 0.5 }} />
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full floating-icons-layer" style={{ opacity: 0.5 }} />
 }
 
 function StatCounter({ value, suffix, label, icon }) {

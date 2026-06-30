@@ -1,12 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { useLenis } from './hooks/useLenis'
-import RocketIntro from './components/RocketIntro'
 import Cursor from './components/Cursor'
 import Navbar from './components/Navbar'
 import FloatingCTA from './components/FloatingCTA'
-import LeadPopup from './components/LeadPopup'
 import Hero from './sections/Hero'
 import TechStack from './sections/TechStack'
 import Services from './sections/Services'
@@ -16,7 +14,13 @@ import About from './sections/About'
 import Testimonials from './sections/Testimonials'
 import Contact from './sections/Contact'
 import Footer from './sections/Footer'
-import ServicePage from './pages/ServicePage'
+
+// Heavy components — code split and lazy loaded
+const RocketIntro       = lazy(() => import('./components/RocketIntro'))
+const LeadPopup         = lazy(() => import('./components/LeadPopup'))
+const ServicePage       = lazy(() => import('./pages/ServicePage'))
+const PrivacyPolicy     = lazy(() => import('./pages/PrivacyPolicy'))
+const TermsConditions   = lazy(() => import('./pages/TermsAndConditions'))
 
 function HomePage({ onIntroDone }) {
   useLenis()
@@ -56,7 +60,7 @@ function HomePage({ onIntroDone }) {
 
   return (
     <>
-      {!introDone && <RocketIntro onComplete={handleIntroDone} />}
+      {!introDone && <Suspense fallback={null}><RocketIntro onComplete={handleIntroDone} /></Suspense>}
       <div className="bg-bg min-h-screen">
         <Cursor />
         <Navbar />
@@ -74,7 +78,7 @@ function HomePage({ onIntroDone }) {
         <FloatingCTA />
       </div>
       <AnimatePresence>
-        {showLead && <LeadPopup onClose={() => setShowLead(false)} />}
+        {showLead && <Suspense fallback={null}><LeadPopup onClose={() => setShowLead(false)} /></Suspense>}
       </AnimatePresence>
     </>
   )
@@ -84,7 +88,9 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/services/:slug" element={<ServicePage />} />
+      <Route path="/services/:slug" element={<Suspense fallback={<div className="bg-bg min-h-screen" />}><ServicePage /></Suspense>} />
+      <Route path="/privacy-policy" element={<Suspense fallback={<div className="bg-bg min-h-screen" />}><PrivacyPolicy /></Suspense>} />
+      <Route path="/terms-and-conditions" element={<Suspense fallback={<div className="bg-bg min-h-screen" />}><TermsConditions /></Suspense>} />
       <Route path="*" element={<HomePage />} />
     </Routes>
   )
