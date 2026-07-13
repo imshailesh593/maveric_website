@@ -22,8 +22,8 @@ export default {
       },
       fontFamily: {
         sans:    ['Inter', 'sans-serif'],
-        display: ['Syne', 'sans-serif'],
-        mono:    ['JetBrains Mono', 'monospace'],
+        display: ['Montserrat', 'sans-serif'],
+        mono:    ['Fragment Mono', 'monospace'],
       },
     },
   },
