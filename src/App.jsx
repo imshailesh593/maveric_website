@@ -3,17 +3,16 @@ import { Routes, Route } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { useLenis } from './hooks/useLenis'
 import Cursor from './components/Cursor'
+import FilmGrain from './components/FilmGrain'
 import Navbar from './components/Navbar'
 import FloatingCTA from './components/FloatingCTA'
 import Hero from './sections/Hero'
-import TechStack from './sections/TechStack'
+import Marquee from './sections/Marquee'
 import Services from './sections/Services'
 import LocalApexShowcase from './sections/LocalApexShowcase'
-import MobileShowcase from './sections/MobileShowcase'
 import Portfolio from './sections/Portfolio'
 import About from './sections/About'
-import Testimonials from './sections/Testimonials'
-import Contact from './sections/Contact'
+import CtaFlood from './sections/CtaFlood'
 import Footer from './sections/Footer'
 
 // Heavy components — code split and lazy loaded
@@ -63,18 +62,17 @@ function HomePage({ onIntroDone }) {
     <>
       {!introDone && <Suspense fallback={null}><RocketIntro onComplete={handleIntroDone} /></Suspense>}
       <div className="bg-bg min-h-screen">
+        <FilmGrain />
         <Cursor />
         <Navbar />
         <main>
           <Hero />
-          <TechStack />
+          <Marquee />
           <Services />
           <LocalApexShowcase />
-          <MobileShowcase />
           <Portfolio />
           <About />
-          <Testimonials />
-          <Contact />
+          <CtaFlood />
         </main>
         <Footer />
         <FloatingCTA />
