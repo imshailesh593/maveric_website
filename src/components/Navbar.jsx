@@ -91,6 +91,15 @@ export default function Navbar() {
           </div>
 
           <a href="/#portfolio" className="text-sm text-muted hover:text-white transition-colors font-medium">Portfolio</a>
+          <a href="https://localapex.mavericinfotech.in" target="_blank" rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1 rounded-full border transition-all"
+            style={{ color: '#8890e8', borderColor: 'rgba(110,118,214,0.3)', background: 'rgba(110,118,214,0.08)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(110,118,214,0.18)'; e.currentTarget.style.borderColor = 'rgba(110,118,214,0.5)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(110,118,214,0.08)'; e.currentTarget.style.borderColor = 'rgba(110,118,214,0.3)' }}>
+            <svg width="12" height="15" viewBox="0 0 40 50" fill="none"><path d="M20 48 L13.5 30.4 A14 14 0 1 1 26.5 30.4 Z" fill="#8890e8"/><path d="M12 23 L20 12 L28 23" stroke="white" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            LocalApex
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity: 0.5 }}><path d="M1 9L9 1M9 1H4M9 1V6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </a>
           <a href="/#about" className="text-sm text-muted hover:text-white transition-colors font-medium">About</a>
           <a href="/#contact" className="text-sm text-muted hover:text-white transition-colors font-medium">Contact</a>
         </div>
@@ -139,6 +148,12 @@ export default function Navbar() {
               </AnimatePresence>
 
               <a href="/#portfolio" onClick={() => setMenuOpen(false)} className="text-muted hover:text-white transition-colors py-2">Portfolio</a>
+              <a href="https://localapex.mavericinfotech.in" target="_blank" rel="noopener noreferrer"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center gap-2 py-2 text-sm font-semibold" style={{ color: '#8890e8' }}>
+                <svg width="12" height="15" viewBox="0 0 40 50" fill="none"><path d="M20 48 L13.5 30.4 A14 14 0 1 1 26.5 30.4 Z" fill="#8890e8"/><path d="M12 23 L20 12 L28 23" stroke="white" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                LocalApex ↗
+              </a>
               <a href="/#about" onClick={() => setMenuOpen(false)} className="text-muted hover:text-white transition-colors py-2">About</a>
               <a href="/#contact" onClick={() => setMenuOpen(false)} className="text-muted hover:text-white transition-colors py-2">Contact</a>
               <a href="/#contact" onClick={() => setMenuOpen(false)}
