@@ -1,124 +1,169 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { gsap } from 'gsap'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link, useLocation } from 'react-router-dom'
 
-const links = [
-  { label: 'Services',  href: '/#services' },
-  { label: 'Portfolio', href: '/#portfolio' },
-  { label: 'About',     href: '/#about' },
-  { label: 'LocalApex', href: 'https://localapex.mavericinfotech.in', external: true },
-  { label: 'Contact',   href: '/#contact' },
+const serviceLinks = [
+  { label: 'Web Development',     slug: 'web-development',  icon: '🌐' },
+  { label: 'Mobile Apps',         slug: 'mobile-apps',      icon: '📱' },
+  { label: 'E-Commerce',          slug: 'ecommerce',        icon: '🛒' },
+  { label: 'SEO & Growth',        slug: 'seo',              icon: '📈' },
+  { label: 'Social Media',        slug: 'social-media',     icon: '📣' },
+  { label: 'Cybersecurity',       slug: 'cybersecurity',    icon: '🔒' },
+  { label: 'WordPress',           slug: 'wordpress',        icon: '⚙️' },
+  { label: 'IT Consultancy',      slug: 'consultancy',      icon: '💡' },
 ]
 
-const leftLinks  = links.slice(0, 2)
-const rightLinks = links.slice(2)
-
-function BarLink({ href, label, external, onClick }) {
-  if (external) return (
-    <a href={href} target="_blank" rel="noopener noreferrer" onClick={onClick}
-      className="font-mono text-[13px] uppercase tracking-widest text-white/85 transition-colors hover:text-yellow">
-      {label} ↗
-    </a>
-  )
-  return (
-    <a href={href} onClick={onClick}
-      className="font-mono text-[13px] uppercase tracking-widest text-white/85 transition-colors hover:text-yellow">
-      {label}
-    </a>
-  )
-}
-
 export default function Navbar() {
-  const [open, setOpen] = useState(false)
+  const navRef = useRef(null)
   const [scrolled, setScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [servicesOpen, setServicesOpen] = useState(false)
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false)
+  const closeTimer = useRef(null)
   const location = useLocation()
+  const isHome = location.pathname === '/'
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 30)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    gsap.fromTo(navRef.current, { y: -80, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: 0.5 })
+    const handleScroll = () => setScrolled(window.scrollY > 50)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  useEffect(() => { setOpen(false) }, [location])
+  useEffect(() => { setMenuOpen(false); setServicesOpen(false) }, [location])
+
+  const navHref = (anchor) => isHome ? anchor : `/${anchor}`
 
   return (
-    <>
-      <header className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled ? 'border-b border-white/10 bg-black/70 backdrop-blur-md' : 'border-b border-transparent'
-      }`}>
-        <div className="mx-auto grid h-16 max-w-site grid-cols-[1fr_auto_1fr] items-center px-5 md:h-20 md:px-8">
-          {/* Left links */}
-          <div className="flex items-center">
-            <nav className="hidden items-center gap-6 md:flex lg:gap-9">
-              {leftLinks.map(l => <BarLink key={l.href} {...l} />)}
-            </nav>
-          </div>
+    <nav ref={navRef}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'py-3 glass border-b border-border' : 'py-5'}`}>
+      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
 
-          {/* Centered M badge */}
-          <Link to="/" aria-label="Maveric Infotech — home" className="justify-self-center">
-            <span className="maveric-logo-badge flex h-14 w-14 items-center justify-center rounded-full bg-black ring-1 ring-white/20 md:h-16 md:w-16">
-              <span className="display text-2xl text-white">M</span>
-            </span>
-          </Link>
+        {/* Logo */}
+        <Link to="/" className="flex items-center">
+          <img src="https://mavericinfotech.in/wp-content/uploads/2024/12/Untitled-design-4.png"
+            alt="Maveric Infotech" className="h-14 w-auto object-contain"
+            onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextSibling.style.display = 'block' }} />
+          <span className="font-display font-bold text-xl tracking-tight hidden">
+            <span className="text-white">MAVERIC</span><span className="text-gradient"> INFOTECH</span>
+          </span>
+        </Link>
 
-          {/* Right links + hamburger */}
-          <div className="flex items-center justify-end gap-6 lg:gap-9">
-            <nav className="hidden items-center gap-6 md:flex lg:gap-9">
-              {rightLinks.map(l => <BarLink key={l.href} {...l} />)}
-            </nav>
-            <button onClick={() => setOpen(v => !v)} aria-label="Toggle menu" aria-expanded={open}
-              className="flex h-10 w-10 flex-col items-center justify-center gap-[7px] md:hidden">
-              <span className={`block h-[2px] w-7 bg-white transition-transform duration-300 ${open ? 'translate-y-[9px] rotate-45' : ''}`} />
-              <span className={`block h-[2px] w-7 bg-white transition-opacity duration-300 ${open ? 'opacity-0' : ''}`} />
-              <span className={`block h-[2px] w-7 bg-white transition-transform duration-300 ${open ? '-translate-y-[9px] -rotate-45' : ''}`} />
+        {/* Desktop nav */}
+        <div className="hidden md:flex items-center gap-7">
+          <a href="/#home" className="text-sm text-muted hover:text-white transition-colors font-medium">Home</a>
+
+          {/* Services dropdown */}
+          <div className="relative"
+            onMouseEnter={() => { clearTimeout(closeTimer.current); setServicesOpen(true) }}
+            onMouseLeave={() => { closeTimer.current = setTimeout(() => setServicesOpen(false), 180) }}>
+            <button className="text-sm text-muted hover:text-white transition-colors font-medium flex items-center gap-1">
+              Services
+              <motion.span animate={{ rotate: servicesOpen ? 180 : 0 }} transition={{ duration: 0.2 }} className="text-[10px]">▾</motion.span>
             </button>
-          </div>
-        </div>
-      </header>
 
-      {/* Mobile full-screen overlay */}
+            <AnimatePresence>
+              {servicesOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 6, scale: 0.97 }}
+                  transition={{ duration: 0.18 }}
+                  className="absolute top-full left-1/2 -translate-x-1/2 mt-3 rounded-2xl overflow-hidden shadow-2xl"
+                  style={{ width: 520, background: '#0f0f0f', border: '1px solid rgba(255,255,255,0.09)' }}>
+                  <div className="p-2 grid grid-cols-2 gap-0.5">
+                    {serviceLinks.map((s) => (
+                      <Link key={s.slug} to={`/services/${s.slug}`}
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition-colors group">
+                        <span className="text-xl shrink-0">{s.icon}</span>
+                        <span className="text-sm text-white/70 group-hover:text-white transition-colors font-medium">{s.label}</span>
+                      </Link>
+                    ))}
+                  </div>
+                  <div className="border-t border-white/6 px-4 py-3 flex items-center justify-between">
+                    <span className="text-xs text-white/30 font-mono">All 8 services · Maveric Infotech</span>
+                    <a href="/#contact" className="text-xs text-accent font-mono hover:underline">Get Free Audit →</a>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <a href="/#portfolio" className="text-sm text-muted hover:text-white transition-colors font-medium">Portfolio</a>
+          <a href="https://localapex.mavericinfotech.in" target="_blank" rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1 rounded-full border transition-all"
+            style={{ color: '#8890e8', borderColor: 'rgba(110,118,214,0.3)', background: 'rgba(110,118,214,0.08)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(110,118,214,0.18)'; e.currentTarget.style.borderColor = 'rgba(110,118,214,0.5)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(110,118,214,0.08)'; e.currentTarget.style.borderColor = 'rgba(110,118,214,0.3)' }}>
+            <svg width="12" height="15" viewBox="0 0 40 50" fill="none"><path d="M20 48 L13.5 30.4 A14 14 0 1 1 26.5 30.4 Z" fill="#8890e8"/><path d="M12 23 L20 12 L28 23" stroke="white" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            LocalApex
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity: 0.5 }}><path d="M1 9L9 1M9 1H4M9 1V6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </a>
+          <a href="/#about" className="text-sm text-muted hover:text-white transition-colors font-medium">About</a>
+          <a href="/#contact" className="text-sm text-muted hover:text-white transition-colors font-medium">Contact</a>
+        </div>
+
+        {/* CTA */}
+        <a href="/#contact"
+          className="hidden md:flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-accent to-purple text-bg hover:opacity-90 transition-opacity">
+          Get Free Audit
+        </a>
+
+        {/* Mobile hamburger */}
+        <button className="md:hidden flex flex-col gap-1.5 p-2" onClick={() => setMenuOpen(!menuOpen)}>
+          <span className={`block w-6 h-0.5 bg-white transition-transform duration-300 ${menuOpen ? 'rotate-45 translate-y-2' : ''}`} />
+          <span className={`block w-6 h-0.5 bg-white transition-opacity duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
+          <span className={`block w-6 h-0.5 bg-white transition-transform duration-300 ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+        </button>
+      </div>
+
+      {/* Mobile menu */}
       <AnimatePresence>
-        {open && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 flex flex-col justify-center bg-black px-8 md:hidden">
-            <nav>
-              <ul className="flex flex-col gap-1">
-                {links.map((l, i) => (
-                  <motion.li key={l.href}
-                    initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
-                    transition={{ delay: i * 0.06, duration: 0.35 }}>
-                    {l.external
-                      ? <a href={l.href} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)}
-                          className="display block text-4xl text-white transition-colors hover:text-yellow sm:text-5xl">
-                          {l.label} ↗
-                        </a>
-                      : <a href={l.href} onClick={() => setOpen(false)}
-                          className="display block text-4xl text-white transition-colors hover:text-yellow sm:text-5xl">
-                          {l.label}
-                        </a>
-                    }
-                  </motion.li>
-                ))}
-              </ul>
-            </nav>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
-              className="mt-12 flex gap-6">
-              {[
-                { label: 'LinkedIn', href: 'https://in.linkedin.com/company/maveric-infotech' },
-                { label: 'Instagram', href: 'https://www.instagram.com/maveric_infotech' },
-                { label: 'Facebook', href: 'https://www.facebook.com/mavericinfotech' },
-              ].map(s => (
-                <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-                  className="font-mono text-xs uppercase tracking-widest text-grey hover:text-yellow">
-                  {s.label}
-                </a>
-              ))}
-            </motion.div>
+        {menuOpen && (
+          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }} className="md:hidden glass border-t border-border mt-2">
+            <div className="flex flex-col px-6 py-4 gap-2">
+              <a href="/#home" onClick={() => setMenuOpen(false)} className="text-muted hover:text-white transition-colors py-2">Home</a>
+
+              {/* Mobile services toggle */}
+              <button onClick={() => setMobileServicesOpen(v => !v)}
+                className="flex items-center justify-between text-muted hover:text-white transition-colors py-2 w-full">
+                Services
+                <motion.span animate={{ rotate: mobileServicesOpen ? 180 : 0 }} className="text-[10px]">▾</motion.span>
+              </button>
+              <AnimatePresence>
+                {mobileServicesOpen && (
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }} className="overflow-hidden pl-3 border-l border-white/10">
+                    {serviceLinks.map(s => (
+                      <Link key={s.slug} to={`/services/${s.slug}`}
+                        onClick={() => setMenuOpen(false)}
+                        className="flex items-center gap-2.5 py-2 text-sm text-white/60 hover:text-white transition-colors">
+                        <span>{s.icon}</span>{s.label}
+                      </Link>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <a href="/#portfolio" onClick={() => setMenuOpen(false)} className="text-muted hover:text-white transition-colors py-2">Portfolio</a>
+              <a href="https://localapex.mavericinfotech.in" target="_blank" rel="noopener noreferrer"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center gap-2 py-2 text-sm font-semibold" style={{ color: '#8890e8' }}>
+                <svg width="12" height="15" viewBox="0 0 40 50" fill="none"><path d="M20 48 L13.5 30.4 A14 14 0 1 1 26.5 30.4 Z" fill="#8890e8"/><path d="M12 23 L20 12 L28 23" stroke="white" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                LocalApex ↗
+              </a>
+              <a href="/#about" onClick={() => setMenuOpen(false)} className="text-muted hover:text-white transition-colors py-2">About</a>
+              <a href="/#contact" onClick={() => setMenuOpen(false)} className="text-muted hover:text-white transition-colors py-2">Contact</a>
+              <a href="/#contact" onClick={() => setMenuOpen(false)}
+                className="mt-2 px-5 py-2.5 rounded-full text-sm font-semibold bg-gradient-to-r from-accent to-purple text-bg text-center">
+                Get Free Audit
+              </a>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </nav>
   )
 }
