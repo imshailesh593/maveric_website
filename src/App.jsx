@@ -8,6 +8,7 @@ import FloatingCTA from './components/FloatingCTA'
 import Hero from './sections/Hero'
 import TechStack from './sections/TechStack'
 import Services from './sections/Services'
+import GoogleIntegration from './sections/GoogleIntegration'
 import MobileShowcase from './sections/MobileShowcase'
 import Portfolio from './sections/Portfolio'
 import About from './sections/About'
@@ -68,6 +69,7 @@ function HomePage({ onIntroDone }) {
           <Hero />
           <TechStack />
           <Services />
+          <GoogleIntegration />
           <MobileShowcase />
           <Portfolio />
           <About />

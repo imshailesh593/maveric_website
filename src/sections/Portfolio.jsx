@@ -1,9 +1,10 @@
 import { useRef, useState, useCallback } from 'react'
 import { motion, useInView, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion'
 
-const categories = ['All', 'Corporate', 'LMS / Portal', 'E-Commerce', 'Matrimonial', 'Media', 'Auto', 'Travel']
+const categories = ['All', 'SaaS', 'Corporate', 'LMS / Portal', 'E-Commerce', 'Matrimonial', 'Media', 'Auto', 'Travel']
 
 const projects = [
+  { id: 0,  title: 'LocalApex',               category: 'SaaS',        year: 2026, industry: 'Local SEO SaaS',            stack: 'FastAPI + React + Flutter', url: 'https://localapex.mavericinfotech.in', color: '#6e76d6', tags: ['SaaS', 'Google Business Profile', 'SEO', 'FastAPI', 'Flutter'], live: true },
   { id: 1,  title: 'Automate India',         category: 'Corporate',    year: 2022, industry: 'Automation / B2B',    stack: 'WordPress',    url: 'https://automateindia.com',      color: '#00BDD9', tags: ['WordPress', 'Corporate', 'SEO'],        live: true },
   { id: 2,  title: 'Dnyanprasad Academy',    category: 'LMS / Portal', year: 2022, industry: 'Education',            stack: 'WordPress',    url: 'https://dnyanprasadacademy.in',  color: '#FF7A00', tags: ['WordPress', 'Education', 'Classes'],    live: true },
   { id: 3,  title: 'Brilliants Academy',     category: 'LMS / Portal', year: 2022, industry: 'Education',            stack: 'WordPress',    url: 'https://brilliantsacademy.in',   color: '#00BDD9', tags: ['WordPress', 'Classes', 'Custom'],       live: true },
