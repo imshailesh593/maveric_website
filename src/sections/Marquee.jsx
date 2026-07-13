@@ -1,51 +1,55 @@
 import { useRef } from 'react'
-import { motion, useScroll, useVelocity, useAnimationFrame, useTransform, useMotionValue, wrap } from 'framer-motion'
+import {
+  motion, useScroll, useVelocity, useSpring, useTransform,
+  useMotionValue, useAnimationFrame,
+} from 'framer-motion'
 
-const ITEMS = [
-  'WEB DEVELOPMENT', '✦', 'MOBILE APPS', '✦', 'E-COMMERCE', '✦',
-  'SEO & GROWTH', '✦', 'CYBERSECURITY', '✦', 'WORDPRESS', '✦',
-  'IT CONSULTANCY', '✦', 'UI/UX DESIGN', '✦',
+const items = [
+  'WEB DEVELOPMENT', 'MOBILE APPS', 'E-COMMERCE', 'SEO & GROWTH',
+  'CYBERSECURITY', 'WORDPRESS', 'IT CONSULTANCY', 'UI/UX DESIGN',
 ]
 
-function MarqueeTrack({ baseVelocity = 80 }) {
-  const baseX = useMotionValue(0)
-  const { scrollY } = useScroll()
-  const scrollVelocity = useVelocity(scrollY)
-  const velocityFactor = useTransform(scrollVelocity, [-1600, 0, 1600], [-6, 0, 6], { clamp: false })
-  const directionFactor = useRef(1)
-  const x = useTransform(baseX, v => `${wrap(-50, 0, v)}%`)
+const wrap = (min, max, v) => {
+  const range = max - min
+  return ((((v - min) % range) + range) % range) + min
+}
 
-  useAnimationFrame((_, delta) => {
-    let moveBy = directionFactor.current * baseVelocity * (delta / 1000)
-    if (velocityFactor.get() < 0) directionFactor.current = -1
-    else if (velocityFactor.get() > 0) directionFactor.current = 1
-    moveBy += directionFactor.current * moveBy * velocityFactor.get()
-    baseX.set(baseX.get() + moveBy)
-  })
-
-  const doubled = [...ITEMS, ...ITEMS]
-
+function Set() {
   return (
-    <motion.div style={{ x }} className="flex gap-12 whitespace-nowrap will-change-transform">
-      {doubled.map((item, i) => (
-        <span key={i}
-          className={item === '✦'
-            ? 'text-accent text-xl'
-            : 'font-display font-black text-white/10 text-3xl tracking-widest uppercase'}>
-          {item}
+    <>
+      {items.map((item, i) => (
+        <span key={i} className="display flex items-center text-3xl text-white/90 md:text-5xl">
+          <span className="px-8">{item}</span>
+          <span className="text-yellow">✦</span>
         </span>
       ))}
-    </motion.div>
+    </>
   )
 }
 
 export default function Marquee() {
+  const baseX = useMotionValue(0)
+  const { scrollY } = useScroll()
+  const scrollVelocity = useVelocity(scrollY)
+  const smoothVelocity = useSpring(scrollVelocity, { damping: 50, stiffness: 400 })
+  const velocityFactor = useTransform(smoothVelocity, [0, 2000], [0, 1.2], { clamp: false })
+  const x = useTransform(baseX, v => `${wrap(-25, 0, v)}%`)
+  const dir = useRef(1)
+
+  useAnimationFrame((_t, delta) => {
+    let moveBy = dir.current * -1.5 * (delta / 1000)
+    const vf = velocityFactor.get()
+    if (vf < 0) dir.current = -1
+    else if (vf > 0) dir.current = 1
+    moveBy += moveBy * Math.abs(vf)
+    baseX.set(baseX.get() + moveBy)
+  })
+
   return (
-    <section className="py-10 overflow-hidden border-y border-border select-none" aria-hidden="true">
-      <div className="relative flex overflow-hidden py-2">
-        <MarqueeTrack baseVelocity={60} />
-        <MarqueeTrack baseVelocity={60} />
-      </div>
-    </section>
+    <div className="overflow-hidden border-y py-6" style={{ borderColor: '#2a2a2a', background: '#0f0f0f' }}>
+      <motion.div style={{ x }} className="flex w-max">
+        <Set /><Set /><Set /><Set />
+      </motion.div>
+    </div>
   )
 }
