@@ -226,12 +226,12 @@ export default function Portfolio() {
   const filtered = active === 'All' ? projects : projects.filter((p) => p.category === active)
 
   return (
-    <section id="portfolio" className="section-pad max-w-7xl mx-auto px-6 relative">
-      <div ref={headRef} className="text-center mb-12">
+    <section id="portfolio" className="px-6 py-24 md:px-10 md:py-32 max-w-[1600px] mx-auto relative">
+      <div ref={headRef} className="mb-12">
         <motion.span
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
-          className="font-mono text-accent text-sm tracking-widest uppercase"
+          className="font-mono text-xs uppercase tracking-widest text-accent"
         >
           Our Work
         </motion.span>
@@ -239,16 +239,16 @@ export default function Portfolio() {
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.1, duration: 0.7 }}
-          className="font-display font-bold text-4xl md:text-5xl text-white mt-3"
+          className="font-display font-black text-5xl md:text-7xl text-white mt-4 leading-tight"
+          style={{ textWrap: 'balance' }}
         >
-          120+ Projects Delivered.{' '}
-          <span className="text-gradient">A Few We're Proud Of.</span>
+          120+ projects.<br />Live and counting.
         </motion.h2>
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.15 }}
-          className="text-muted mt-3 max-w-xl mx-auto text-sm"
+          className="text-muted mt-4 max-w-xl text-base"
         >
           Websites built, launched, and live — across industries and scale.
         </motion.p>
@@ -293,8 +293,8 @@ export default function Portfolio() {
         viewport={{ once: true }}
         className="text-center mt-12"
       >
-        <a href="#contact" className="inline-flex items-center gap-2 text-accent text-sm font-medium hover:gap-3 transition-all">
-          Have a project in mind? Let's talk →
+        <a href="mailto:info@mavericinfotech.in" className="inline-flex items-center gap-2 text-accent text-sm font-mono hover:gap-3 transition-all">
+          Have a project in mind? Let&apos;s talk →
         </a>
       </motion.div>
     </section>

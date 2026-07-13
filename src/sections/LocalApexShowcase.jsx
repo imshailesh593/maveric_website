@@ -19,8 +19,8 @@ export default function LocalApexShowcase() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section id="localapex" className="section-pad overflow-hidden" ref={ref}>
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="localapex" className="px-6 py-24 md:px-10 md:py-32 overflow-hidden" ref={ref}>
+      <div className="max-w-[1600px] mx-auto">
 
         {/* Eyebrow */}
         <motion.div
@@ -34,8 +34,8 @@ export default function LocalApexShowcase() {
         <motion.h2
           initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.55, delay: 0.08 }}
-          className="text-4xl md:text-5xl font-display font-black text-center text-white mb-4" style={{ textWrap: 'balance' }}>
-          Meet <span className="text-gradient">LocalApex</span>
+          className="text-5xl md:text-7xl font-display font-black text-center text-white mb-4 leading-tight" style={{ textWrap: 'balance' }}>
+          Meet <span style={{ color: '#6e76d6' }}>LocalApex</span>
         </motion.h2>
 
         <motion.p

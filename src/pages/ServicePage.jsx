@@ -63,7 +63,7 @@ export default function ServicePage() {
 
               <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1, duration: 0.7 }}
-                className="font-display font-bold text-4xl md:text-5xl lg:text-6xl text-white leading-[1.05] tracking-tight mb-4">
+                className="font-display font-black text-4xl md:text-5xl lg:text-6xl text-white leading-[1.05] tracking-tight mb-4">
                 {tagline}
               </motion.h1>
 
@@ -75,11 +75,12 @@ export default function ServicePage() {
 
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }} className="flex gap-3 flex-wrap">
-                <Link to="/#contact"
+                <a href="https://wa.me/919552302834?text=Hi%20Maveric%2C%20I%27d%20like%20to%20discuss%20a%20project"
+                  target="_blank" rel="noopener noreferrer"
                   className="px-7 py-3 rounded-full font-semibold text-sm text-bg hover:opacity-90 transition-opacity"
                   style={{ background: `linear-gradient(135deg, ${color}, #FF7A00)` }}>
                   Get a Free Quote →
-                </Link>
+                </a>
                 <Link to="/"
                   className="px-7 py-3 rounded-full font-semibold text-sm text-white glass border border-white/10 hover:border-accent/40 transition-colors">
                   ← Back to Home
@@ -121,7 +122,7 @@ export default function ServicePage() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="mb-12">
             <span className="font-mono text-xs tracking-widest uppercase" style={{ color }}>What's Included</span>
-            <h2 className="font-display font-bold text-3xl md:text-4xl text-white mt-2">
+            <h2 className="font-display font-black text-3xl md:text-4xl text-white mt-2">
               Everything You Need to Succeed
             </h2>
           </div>
@@ -148,7 +149,7 @@ export default function ServicePage() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="mb-12">
             <span className="font-mono text-xs tracking-widest uppercase" style={{ color }}>How We Work</span>
-            <h2 className="font-display font-bold text-3xl md:text-4xl text-white mt-2">Our Process</h2>
+            <h2 className="font-display font-black text-3xl md:text-4xl text-white mt-2">Our Process</h2>
           </div>
           <div className="flex flex-col md:flex-row gap-0">
             {process.map((p, i) => (
@@ -182,7 +183,7 @@ export default function ServicePage() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="mb-8">
             <span className="font-mono text-xs tracking-widest uppercase" style={{ color }}>Technology Stack</span>
-            <h2 className="font-display font-bold text-2xl text-white mt-2">Tools & Technologies We Use</h2>
+            <h2 className="font-display font-black text-2xl text-white mt-2">Tools & Technologies We Use</h2>
           </div>
           <div className="flex flex-wrap gap-3">
             {stack.map((tech, i) => (
@@ -204,7 +205,7 @@ export default function ServicePage() {
       <section className="py-20 border-t border-white/5">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="font-display font-bold text-3xl md:text-4xl text-white mb-4">
+            <h2 className="font-display font-black text-3xl md:text-4xl text-white mb-4">
               Ready to Get Started?
             </h2>
             <p className="text-white/45 mb-8 max-w-xl mx-auto">
@@ -217,10 +218,10 @@ export default function ServicePage() {
                 style={{ background: `linear-gradient(135deg, ${color}, #FF7A00)` }}>
                 WhatsApp Us Now
               </a>
-              <Link to="/#contact"
+              <a href="mailto:info@mavericinfotech.in"
                 className="px-8 py-3.5 rounded-full font-semibold text-sm text-white glass border border-white/10 hover:border-accent/40 transition-colors">
-                Fill Contact Form
-              </Link>
+                Email Us →
+              </a>
             </div>
           </motion.div>
         </div>
